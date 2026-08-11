@@ -1,0 +1,2853 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>联想邮件编辑器 · 专业版</title>
+    <style>
+        /* ===== 全局重置 & 品牌变量 ===== */
+        :root {
+            --lenovo-blue: #0078D7;
+            --lenovo-blue-dark: #005A9E;
+            --lenovo-blue-deep: #1E3A6B;
+            --lenovo-blue-light: #E6F2FC;
+            --lenovo-red: #E60000;
+            --lenovo-gray-1: #F7F9FC;
+            --lenovo-gray-2: #EDF2F7;
+            --lenovo-gray-3: #D0D7E2;
+            --lenovo-gray-4: #8A9BB5;
+            --lenovo-gray-5: #4A5A72;
+            --lenovo-gray-6: #1A2A3A;
+            --shadow-sm: 0 2px 8px rgba(0, 120, 215, 0.08);
+            --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.10);
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', '微软雅黑', sans-serif;
+            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--lenovo-gray-1);
+            font-family: var(--font-family);
+            padding: 24px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            color: var(--lenovo-gray-6);
+        }
+
+        /* ===== 应用容器 ===== */
+        .app {
+            max-width: 1540px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            padding: 0;
+            border: 1px solid rgba(0, 120, 215, 0.06);
+        }
+
+        /* ===== 头部 ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 32px 16px 32px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%);
+            border-bottom: 2px solid var(--lenovo-blue-light);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-logo .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--lenovo-blue);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: -0.5px;
+            box-shadow: 0 4px 12px rgba(0, 120, 215, 0.25);
+        }
+        .header-logo .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--lenovo-blue-deep);
+            letter-spacing: -0.3px;
+        }
+        .header-logo .logo-text span {
+            color: var(--lenovo-blue);
+        }
+        .header-logo .logo-badge {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--lenovo-gray-4);
+            background: var(--lenovo-gray-2);
+            padding: 2px 14px;
+            border-radius: 30px;
+            margin-left: 4px;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .header-right .badge-outlook {
+            background: var(--lenovo-blue-deep);
+            color: white;
+            padding: 4px 18px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            box-shadow: 0 2px 8px rgba(30, 58, 107, 0.15);
+        }
+        .header-right .badge-outlook::before {
+            content: "✓ ";
+            font-weight: 700;
+        }
+        .header-right .version-tag {
+            font-size: 11px;
+            color: var(--lenovo-gray-4);
+            background: var(--lenovo-gray-2);
+            padding: 2px 12px;
+            border-radius: 30px;
+        }
+
+        /* ===== 工具栏 ===== */
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 4px 8px;
+            padding: 10px 20px;
+            background: var(--lenovo-gray-1);
+            border-bottom: 1px solid var(--lenovo-gray-2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .toolbar .btn {
+            background: white;
+            border: 1px solid var(--lenovo-gray-3);
+            padding: 4px 14px;
+            border-radius: var(--radius-xl);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--lenovo-gray-5);
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            height: 30px;
+            white-space: nowrap;
+            font-family: var(--font-family);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+        }
+        .toolbar .btn:hover {
+            background: var(--lenovo-blue-light);
+            border-color: var(--lenovo-blue);
+            color: var(--lenovo-blue-deep);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+        .toolbar .btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+        .toolbar .btn-primary {
+            background: var(--lenovo-blue);
+            border-color: var(--lenovo-blue);
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 120, 215, 0.2);
+        }
+        .toolbar .btn-primary:hover {
+            background: var(--lenovo-blue-dark);
+            border-color: var(--lenovo-blue-dark);
+            color: white;
+            box-shadow: 0 4px 14px rgba(0, 120, 215, 0.3);
+        }
+        .toolbar .btn-success {
+            background: #1a8a4a;
+            border-color: #1a8a4a;
+            color: white;
+        }
+        .toolbar .btn-success:hover {
+            background: #14703b;
+            border-color: #14703b;
+            color: white;
+        }
+        .toolbar .btn-download {
+            background: #0f7b8c;
+            border-color: #0f7b8c;
+            color: white;
+        }
+        .toolbar .btn-download:hover {
+            background: #0b6372;
+            border-color: #0b6372;
+            color: white;
+        }
+        .toolbar .btn-danger {
+            background: #dc3545;
+            border-color: #dc3545;
+            color: white;
+        }
+        .toolbar .btn-danger:hover {
+            background: #b02a37;
+            border-color: #b02a37;
+            color: white;
+        }
+        .toolbar .btn-outline {
+            background: transparent;
+            border: 1px solid var(--lenovo-gray-3);
+            color: var(--lenovo-gray-5);
+        }
+        .toolbar .btn-outline:hover {
+            background: var(--lenovo-blue-light);
+            border-color: var(--lenovo-blue);
+            color: var(--lenovo-blue-deep);
+        }
+        .toolbar .btn-outline.active {
+            background: var(--lenovo-blue);
+            border-color: var(--lenovo-blue);
+            color: white;
+        }
+        .toolbar .btn-sm {
+            height: 26px;
+            padding: 2px 12px;
+            font-size: 11px;
+        }
+        .toolbar .sep {
+            width: 1px;
+            height: 24px;
+            background: var(--lenovo-gray-3);
+            display: inline-block;
+            flex-shrink: 0;
+            margin: 0 2px;
+        }
+        .toolbar .label-tool {
+            font-size: 10px;
+            color: var(--lenovo-gray-4);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-right: 2px;
+        }
+        .toolbar select,
+        .toolbar input[type="color"] {
+            border: 1px solid var(--lenovo-gray-3);
+            border-radius: var(--radius-xl);
+            padding: 2px 10px;
+            font-size: 12px;
+            background: white;
+            height: 28px;
+            cursor: pointer;
+            font-family: var(--font-family);
+            transition: var(--transition);
+            color: var(--lenovo-gray-5);
+        }
+        .toolbar select:hover,
+        .toolbar input[type="color"]:hover {
+            border-color: var(--lenovo-blue);
+        }
+        .toolbar select:focus,
+        .toolbar input[type="color"]:focus {
+            outline: none;
+            border-color: var(--lenovo-blue);
+            box-shadow: 0 0 0 3px rgba(0, 120, 215, 0.1);
+        }
+        .toolbar input[type="color"] {
+            width: 32px;
+            padding: 2px;
+            border-radius: var(--radius-sm);
+            height: 30px;
+            cursor: pointer;
+        }
+
+        .color-presets {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+        .color-presets .dot {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: var(--transition);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+        }
+        .color-presets .dot:hover {
+            transform: scale(1.15);
+            border-color: var(--lenovo-blue);
+            box-shadow: 0 2px 8px rgba(0, 120, 215, 0.15);
+        }
+
+        .highlight-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: #fef9e7;
+            padding: 2px 12px 2px 6px;
+            border-radius: var(--radius-xl);
+            border: 1px solid #f0e6c8;
+        }
+        .highlight-group .label-tool {
+            color: #a8893a;
+        }
+
+        .global-font-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--lenovo-blue-light);
+            padding: 2px 14px 2px 8px;
+            border-radius: var(--radius-xl);
+            border: 1px solid rgba(0, 120, 215, 0.15);
+        }
+        .global-font-group .label-tool {
+            color: var(--lenovo-blue-deep);
+        }
+        .global-font-group select {
+            border: 1px solid rgba(0, 120, 215, 0.2);
+            border-radius: var(--radius-xl);
+            padding: 2px 8px;
+            font-size: 11px;
+            background: white;
+            height: 26px;
+            cursor: pointer;
+        }
+        .global-font-group .btn-apply-global {
+            background: var(--lenovo-blue);
+            border: none;
+            color: white;
+            padding: 2px 16px;
+            border-radius: var(--radius-xl);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            height: 26px;
+            transition: var(--transition);
+            font-family: var(--font-family);
+        }
+        .global-font-group .btn-apply-global:hover {
+            background: var(--lenovo-blue-dark);
+            transform: scale(1.02);
+        }
+
+        /* ===== 符号面板 ===== */
+        .symbol-panel {
+            display: none;
+            position: absolute;
+            background: white;
+            border: 1px solid var(--lenovo-gray-2);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            box-shadow: var(--shadow-lg);
+            z-index: 500;
+            width: 340px;
+            max-width: 90vw;
+            top: 100%;
+            left: 0;
+            margin-top: 6px;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .symbol-panel.show {
+            display: flex;
+        }
+        .symbol-panel .sym-btn {
+            width: 34px;
+            height: 34px;
+            border: 1px solid var(--lenovo-gray-2);
+            border-radius: var(--radius-sm);
+            background: white;
+            cursor: pointer;
+            font-size: 17px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            font-family: var(--font-family);
+        }
+        .symbol-panel .sym-btn:hover {
+            background: var(--lenovo-blue-light);
+            border-color: var(--lenovo-blue);
+            transform: scale(1.06);
+        }
+        .symbol-panel .sym-category {
+            font-size: 10px;
+            color: var(--lenovo-gray-4);
+            width: 100%;
+            padding: 8px 0 4px 0;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--lenovo-gray-2);
+            margin-bottom: 4px;
+        }
+        .symbol-panel .sym-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+            width: 100%;
+        }
+        .symbol-toggle-wrap {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* ===== 编辑器行 ===== */
+        .editor-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0;
+            padding: 0;
+            background: white;
+        }
+        .editor-col {
+            flex: 1 1 50%;
+            min-width: 380px;
+            padding: 20px 24px 24px 24px;
+            border-right: 1px solid var(--lenovo-gray-2);
+        }
+        .editor-col:last-child {
+            border-right: none;
+        }
+        .editor-col .label {
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--lenovo-blue-deep);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .editor-col .label span {
+            background: var(--lenovo-blue-light);
+            padding: 0 14px;
+            border-radius: var(--radius-xl);
+            font-size: 11px;
+            font-weight: 400;
+            color: var(--lenovo-blue-dark);
+            line-height: 26px;
+        }
+        .editor-col .label .save-btn {
+            margin-left: auto;
+            background: var(--lenovo-blue);
+            border: none;
+            color: white;
+            padding: 2px 20px;
+            border-radius: var(--radius-xl);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            height: 28px;
+            transition: var(--transition);
+            white-space: nowrap;
+            font-family: var(--font-family);
+            box-shadow: 0 2px 8px rgba(0, 120, 215, 0.15);
+        }
+        .editor-col .label .save-btn:hover {
+            background: var(--lenovo-blue-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(0, 120, 215, 0.25);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 520px;
+            font-family: 'SF Mono', 'Menlo', 'Consolas', '微软雅黑', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            padding: 18px 22px;
+            border: 1px solid var(--lenovo-gray-2);
+            border-radius: var(--radius-md);
+            background: var(--lenovo-gray-1);
+            resize: vertical;
+            color: var(--lenovo-gray-6);
+            transition: var(--transition);
+            tab-size: 2;
+        }
+        textarea:focus {
+            border-color: var(--lenovo-blue);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(0, 120, 215, 0.08);
+            background: white;
+        }
+        textarea::selection {
+            background: var(--lenovo-blue-light);
+        }
+
+        .preview-box {
+            background: #ffffff;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--lenovo-gray-2);
+            overflow: hidden;
+            min-height: 540px;
+            transition: var(--transition);
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+        .preview-box:hover {
+            border-color: var(--lenovo-gray-3);
+        }
+        .preview-box iframe {
+            width: 100%;
+            min-height: 540px;
+            border: none;
+            display: block;
+            background: white;
+        }
+
+        /* ===== 底部设置 ===== */
+        .footer-settings {
+            padding: 20px 28px 24px 28px;
+            border-top: 1px solid var(--lenovo-gray-2);
+            background: var(--lenovo-gray-1);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+        }
+        .settings-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px 30px;
+            background: white;
+            padding: 16px 24px 20px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--lenovo-gray-2);
+            flex: 2;
+            box-shadow: var(--shadow-sm);
+        }
+        .setting-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .setting-item label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--lenovo-gray-5);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .setting-item label input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--lenovo-blue);
+            cursor: pointer;
+        }
+        .setting-item input[type="text"],
+        .setting-item input[type="number"] {
+            border: 1px solid var(--lenovo-gray-2);
+            border-radius: var(--radius-xl);
+            padding: 4px 16px;
+            font-size: 12px;
+            background: white;
+            min-width: 140px;
+            transition: var(--transition);
+            font-family: var(--font-family);
+            color: var(--lenovo-gray-6);
+        }
+        .setting-item input[type="text"]:focus,
+        .setting-item input[type="number"]:focus {
+            border-color: var(--lenovo-blue);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 120, 215, 0.08);
+        }
+        .setting-item select {
+            border: 1px solid var(--lenovo-gray-2);
+            border-radius: var(--radius-xl);
+            padding: 4px 12px;
+            font-size: 12px;
+            background: white;
+            font-family: var(--font-family);
+            color: var(--lenovo-gray-6);
+        }
+        .setting-item select:focus {
+            border-color: var(--lenovo-blue);
+            outline: none;
+        }
+        .action-right {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .status-msg {
+            font-size: 12px;
+            color: var(--lenovo-blue-dark);
+            background: var(--lenovo-blue-light);
+            padding: 4px 20px;
+            border-radius: var(--radius-xl);
+            font-weight: 500;
+            box-shadow: 0 1px 4px rgba(0, 120, 215, 0.06);
+        }
+        .hidden-input {
+            display: none;
+        }
+        .spacing-input {
+            width: 60px !important;
+            min-width: 60px !important;
+            text-align: center;
+        }
+        .style-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 2px;
+        }
+        .style-row .label-sm {
+            font-size: 11px;
+            color: var(--lenovo-gray-4);
+            font-weight: 500;
+        }
+        .style-row select,
+        .style-row input[type="color"] {
+            border: 1px solid var(--lenovo-gray-2);
+            border-radius: var(--radius-xl);
+            padding: 2px 10px;
+            font-size: 11px;
+            background: white;
+            height: 26px;
+            cursor: pointer;
+            font-family: var(--font-family);
+        }
+        .style-row input[type="color"] {
+            width: 28px;
+            padding: 2px;
+            border-radius: var(--radius-sm);
+        }
+
+        /* ===== 模态框通用 ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.show {
+            display: flex;
+        }
+        .modal-box {
+            background: white;
+            border-radius: var(--radius-lg);
+            max-width: 840px;
+            width: 92%;
+            max-height: 85vh;
+            padding: 28px 32px 32px;
+            box-shadow: var(--shadow-lg);
+            overflow-y: auto;
+            position: relative;
+            animation: modalIn 0.25s ease;
+        }
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96) translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .modal-box h2 {
+            font-size: 20px;
+            color: var(--lenovo-blue-deep);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+        }
+        .modal-box .close-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--lenovo-gray-4);
+            padding: 0 8px;
+            transition: var(--transition);
+            line-height: 1;
+        }
+        .modal-box .close-btn:hover {
+            color: var(--lenovo-gray-6);
+            transform: rotate(90deg);
+        }
+
+        /* ===== 模板管理 ===== */
+        .modal-box .library-list {
+            margin-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .modal-box .library-item {
+            border: 1px solid var(--lenovo-gray-2);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            background: var(--lenovo-gray-1);
+            transition: var(--transition);
+        }
+        .modal-box .library-item:hover {
+            border-color: var(--lenovo-blue);
+            box-shadow: var(--shadow-sm);
+        }
+        .modal-box .library-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .modal-box .library-name {
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--lenovo-blue-deep);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .modal-box .library-name:hover {
+            color: var(--lenovo-blue);
+        }
+        .modal-box .library-name::before {
+            content: "📁";
+            font-size: 18px;
+        }
+        .modal-box .lib-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .modal-box .lib-actions .btn-sm {
+            padding: 2px 14px;
+            font-size: 11px;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--lenovo-gray-3);
+            background: white;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font-family);
+        }
+        .modal-box .lib-actions .btn-sm:hover {
+            background: var(--lenovo-blue-light);
+            border-color: var(--lenovo-blue);
+        }
+        .modal-box .lib-actions .btn-danger-sm {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+        .modal-box .lib-actions .btn-danger-sm:hover {
+            background: #fce8ea;
+            border-color: #dc3545;
+        }
+        .modal-box .template-list {
+            margin-top: 6px;
+            padding-left: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .modal-box .template-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 12px 4px 16px;
+            border-radius: var(--radius-xl);
+            background: white;
+            font-size: 13px;
+            border: 1px solid transparent;
+            transition: var(--transition);
+        }
+        .modal-box .template-item:hover {
+            border-color: var(--lenovo-blue-light);
+            background: var(--lenovo-blue-light);
+        }
+        .modal-box .template-item .tpl-name {
+            cursor: pointer;
+            flex: 1;
+            font-weight: 500;
+            color: var(--lenovo-gray-6);
+        }
+        .modal-box .template-item .tpl-name:hover {
+            color: var(--lenovo-blue);
+            text-decoration: underline;
+        }
+        .modal-box .template-item .tpl-actions {
+            display: flex;
+            gap: 4px;
+        }
+        .modal-box .template-item .tpl-actions .btn-sm {
+            padding: 1px 12px;
+            font-size: 10px;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--lenovo-gray-3);
+            background: white;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font-family);
+        }
+        .modal-box .template-item .tpl-actions .btn-sm:hover {
+            background: var(--lenovo-blue-light);
+            border-color: var(--lenovo-blue);
+        }
+        .modal-box .template-item .tpl-actions .btn-danger-sm {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+        .modal-box .template-item .tpl-actions .btn-danger-sm:hover {
+            background: #fce8ea;
+        }
+        .modal-box .add-template-area {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .modal-box .add-template-area input {
+            border: 1px solid var(--lenovo-gray-2);
+            border-radius: var(--radius-xl);
+            padding: 4px 14px;
+            font-size: 12px;
+            flex: 1;
+            min-width: 100px;
+            font-family: var(--font-family);
+            transition: var(--transition);
+        }
+        .modal-box .add-template-area input:focus {
+            border-color: var(--lenovo-blue);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 120, 215, 0.08);
+        }
+        .modal-box .add-template-area .btn-sm {
+            padding: 4px 16px;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--lenovo-blue);
+            background: var(--lenovo-blue);
+            color: white;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: var(--transition);
+            font-family: var(--font-family);
+        }
+        .modal-box .add-template-area .btn-sm:hover {
+            background: var(--lenovo-blue-dark);
+            border-color: var(--lenovo-blue-dark);
+        }
+        .modal-box .add-library-area {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--lenovo-gray-2);
+            flex-wrap: wrap;
+        }
+        .modal-box .add-library-area input {
+            border: 1px solid var(--lenovo-gray-2);
+            border-radius: var(--radius-xl);
+            padding: 6px 18px;
+            font-size: 13px;
+            flex: 1;
+            min-width: 150px;
+            font-family: var(--font-family);
+            transition: var(--transition);
+        }
+        .modal-box .add-library-area input:focus {
+            border-color: var(--lenovo-blue);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 120, 215, 0.08);
+        }
+        .modal-box .add-library-area .btn-primary {
+            background: var(--lenovo-blue);
+            color: white;
+            border: none;
+            padding: 6px 24px;
+            border-radius: var(--radius-xl);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font-family);
+        }
+        .modal-box .add-library-area .btn-primary:hover {
+            background: var(--lenovo-blue-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* ===== 图片管理模态框 ===== */
+        .img-manage-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 1800;
+            justify-content: center;
+            align-items: center;
+        }
+        .img-manage-modal-overlay.show {
+            display: flex;
+        }
+        .img-manage-modal {
+            background: white;
+            border-radius: var(--radius-lg);
+            max-width: 580px;
+            width: 92%;
+            max-height: 80vh;
+            padding: 28px 32px 32px;
+            box-shadow: var(--shadow-lg);
+            overflow-y: auto;
+            animation: modalIn 0.25s ease;
+        }
+        .img-manage-modal h3 {
+            font-size: 20px;
+            color: var(--lenovo-blue-deep);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+        }
+        .img-manage-modal .close-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--lenovo-gray-4);
+            padding: 0 8px;
+            transition: var(--transition);
+            line-height: 1;
+        }
+        .img-manage-modal .close-btn:hover {
+            color: var(--lenovo-gray-6);
+            transform: rotate(90deg);
+        }
+        .img-manage-modal .img-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 10px 14px;
+            border: 1px solid var(--lenovo-gray-2);
+            border-radius: var(--radius-md);
+            margin-bottom: 8px;
+            background: white;
+            transition: var(--transition);
+        }
+        .img-manage-modal .img-item:hover {
+            border-color: var(--lenovo-blue);
+            box-shadow: var(--shadow-sm);
+        }
+        .img-manage-modal .img-item img {
+            width: 56px;
+            height: 56px;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--lenovo-gray-2);
+            flex-shrink: 0;
+        }
+        .img-manage-modal .img-item .info {
+            flex: 1;
+            font-size: 12px;
+            color: var(--lenovo-gray-6);
+            overflow: hidden;
+        }
+        .img-manage-modal .img-item .info .name {
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .img-manage-modal .img-item .info .dims {
+            color: var(--lenovo-gray-4);
+            font-size: 11px;
+        }
+        .img-manage-modal .img-item .del-btn {
+            background: #dc3545;
+            border: none;
+            color: white;
+            padding: 4px 16px;
+            border-radius: var(--radius-xl);
+            font-size: 11px;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: var(--transition);
+            font-family: var(--font-family);
+        }
+        .img-manage-modal .img-item .del-btn:hover {
+            background: #b02a37;
+            transform: scale(1.02);
+        }
+        .img-manage-modal .empty-msg {
+            color: var(--lenovo-gray-4);
+            text-align: center;
+            padding: 40px 0;
+            font-size: 14px;
+        }
+        .img-manage-modal .stats {
+            font-size: 12px;
+            color: var(--lenovo-blue-dark);
+            background: var(--lenovo-blue-light);
+            padding: 4px 18px;
+            border-radius: var(--radius-xl);
+            font-weight: 500;
+        }
+
+        /* ===== 图片尺寸调整模态框 ===== */
+        .img-size-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .img-size-modal-overlay.show {
+            display: flex;
+        }
+        .img-size-modal {
+            background: white;
+            border-radius: var(--radius-lg);
+            max-width: 460px;
+            width: 92%;
+            padding: 32px 36px 36px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            animation: modalIn 0.25s ease;
+        }
+        .img-size-modal h3 {
+            font-size: 20px;
+            color: var(--lenovo-blue-deep);
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+        .img-size-modal .sub-info {
+            font-size: 13px;
+            color: var(--lenovo-gray-4);
+            margin-bottom: 18px;
+        }
+        .img-size-modal .field-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .img-size-modal .field-row label {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--lenovo-gray-5);
+            min-width: 60px;
+        }
+        .img-size-modal .field-row input[type="number"] {
+            flex: 1;
+            border: 1px solid var(--lenovo-gray-2);
+            border-radius: var(--radius-xl);
+            padding: 8px 16px;
+            font-size: 14px;
+            background: white;
+            width: 100%;
+            transition: var(--transition);
+            font-family: var(--font-family);
+        }
+        .img-size-modal .field-row input[type="number"]:focus {
+            border-color: var(--lenovo-blue);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 120, 215, 0.08);
+        }
+        .img-size-modal .field-row .dimension-hint {
+            font-size: 13px;
+            color: var(--lenovo-gray-4);
+            min-width: 80px;
+            text-align: right;
+        }
+        .img-size-modal .ratio-lock {
+            font-size: 12px;
+            color: var(--lenovo-blue-dark);
+            background: var(--lenovo-blue-light);
+            padding: 2px 16px;
+            border-radius: var(--radius-xl);
+            display: inline-block;
+            margin-left: 2px;
+            font-weight: 500;
+        }
+        .img-size-modal .preview-row {
+            margin: 8px 0 20px 0;
+            padding: 14px;
+            background: var(--lenovo-gray-1);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--lenovo-gray-2);
+            text-align: center;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .img-size-modal .preview-row img {
+            max-width: 100%;
+            max-height: 180px;
+            border-radius: var(--radius-sm);
+            object-fit: contain;
+        }
+        .img-size-modal .btn-group {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 8px;
+        }
+        .img-size-modal .btn-group .btn {
+            padding: 8px 32px;
+            border-radius: var(--radius-xl);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid var(--lenovo-gray-3);
+            background: white;
+            color: var(--lenovo-gray-5);
+            transition: var(--transition);
+            font-family: var(--font-family);
+        }
+        .img-size-modal .btn-group .btn:hover {
+            background: var(--lenovo-gray-2);
+        }
+        .img-size-modal .btn-group .btn-primary {
+            background: var(--lenovo-blue);
+            border-color: var(--lenovo-blue);
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 120, 215, 0.15);
+        }
+        .img-size-modal .btn-group .btn-primary:hover {
+            background: var(--lenovo-blue-dark);
+            border-color: var(--lenovo-blue-dark);
+            box-shadow: 0 4px 14px rgba(0, 120, 215, 0.25);
+            transform: translateY(-1px);
+        }
+
+        /* ===== 模板编辑模态框 ===== */
+        #templateEditModal .modal-box {
+            max-width: 620px;
+        }
+        #templateEditModal .modal-box label {
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--lenovo-gray-5);
+            display: block;
+            margin-bottom: 4px;
+        }
+        #templateEditModal .modal-box input,
+        #templateEditModal .modal-box textarea {
+            width: 100%;
+            padding: 8px 16px;
+            border: 1px solid var(--lenovo-gray-2);
+            border-radius: var(--radius-xl);
+            font-size: 13px;
+            font-family: var(--font-family);
+            background: white;
+            transition: var(--transition);
+            color: var(--lenovo-gray-6);
+        }
+        #templateEditModal .modal-box textarea {
+            border-radius: var(--radius-md);
+            resize: vertical;
+            min-height: 140px;
+            line-height: 1.7;
+        }
+        #templateEditModal .modal-box input:focus,
+        #templateEditModal .modal-box textarea:focus {
+            border-color: var(--lenovo-blue);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 120, 215, 0.08);
+        }
+        #templateEditModal .modal-box .btn-group {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 18px;
+        }
+        #templateEditModal .modal-box .btn-group .btn {
+            padding: 6px 32px;
+            border-radius: var(--radius-xl);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid var(--lenovo-gray-3);
+            background: white;
+            color: var(--lenovo-gray-5);
+            transition: var(--transition);
+            font-family: var(--font-family);
+        }
+        #templateEditModal .modal-box .btn-group .btn:hover {
+            background: var(--lenovo-gray-2);
+        }
+        #templateEditModal .modal-box .btn-group .btn-primary {
+            background: var(--lenovo-blue);
+            border-color: var(--lenovo-blue);
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 120, 215, 0.12);
+        }
+        #templateEditModal .modal-box .btn-group .btn-primary:hover {
+            background: var(--lenovo-blue-dark);
+            border-color: var(--lenovo-blue-dark);
+            transform: translateY(-1px);
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 1024px) {
+            .editor-col {
+                flex: 1 1 100%;
+                min-width: 0;
+                border-right: none;
+                border-bottom: 1px solid var(--lenovo-gray-2);
+                padding: 16px 20px 20px;
+            }
+            .editor-col:last-child {
+                border-bottom: none;
+            }
+            textarea {
+                min-height: 300px;
+            }
+            .preview-box iframe {
+                min-height: 340px;
+            }
+        }
+        @media (max-width: 820px) {
+            body {
+                padding: 12px;
+            }
+            .app {
+                border-radius: var(--radius-md);
+            }
+            .header {
+                padding: 14px 18px 12px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .header-right {
+                width: 100%;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+            }
+            .toolbar {
+                padding: 8px 12px;
+                gap: 4px 6px;
+                border-radius: 0;
+            }
+            .toolbar .btn {
+                font-size: 11px;
+                padding: 2px 10px;
+                height: 26px;
+            }
+            .toolbar .label-tool {
+                font-size: 9px;
+            }
+            .editor-col {
+                padding: 12px 14px 16px;
+            }
+            textarea {
+                min-height: 220px;
+                padding: 14px 16px;
+                font-size: 12px;
+            }
+            .preview-box iframe {
+                min-height: 260px;
+            }
+            .footer-settings {
+                padding: 14px 16px 18px;
+                flex-direction: column;
+            }
+            .settings-group {
+                padding: 12px 16px 16px;
+                flex-direction: column;
+                gap: 12px;
+            }
+            .modal-box {
+                padding: 20px 18px 24px;
+            }
+            .img-size-modal {
+                padding: 24px 20px 28px;
+            }
+            .img-size-modal .field-row {
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+            .img-size-modal .field-row label {
+                min-width: auto;
+            }
+            .img-size-modal .field-row .dimension-hint {
+                min-width: auto;
+                text-align: left;
+            }
+            .symbol-panel {
+                width: 260px;
+                left: -20px;
+            }
+            .editor-col .label .save-btn {
+                font-size: 11px;
+                padding: 0 14px;
+                height: 26px;
+            }
+            .editor-col .label span {
+                font-size: 10px;
+                padding: 0 10px;
+                line-height: 22px;
+            }
+            .global-font-group {
+                padding: 2px 8px 2px 6px;
+                flex-wrap: wrap;
+            }
+            .global-font-group .btn-apply-global {
+                font-size: 10px;
+                padding: 0 12px;
+                height: 24px;
+            }
+            .header-logo .logo-text {
+                font-size: 17px;
+            }
+            .header-logo .logo-icon {
+                width: 30px;
+                height: 30px;
+                font-size: 15px;
+            }
+            .action-right {
+                width: 100%;
+                justify-content: center;
+            }
+            .status-msg {
+                font-size: 11px;
+                padding: 3px 14px;
+            }
+        }
+        @media (max-width: 480px) {
+            .toolbar .btn {
+                font-size: 10px;
+                padding: 1px 8px;
+                height: 24px;
+            }
+            .toolbar .sep {
+                height: 18px;
+                margin: 0 1px;
+            }
+            .toolbar select {
+                font-size: 10px;
+                height: 24px;
+                padding: 0 6px;
+            }
+            .toolbar input[type="color"] {
+                width: 26px;
+                height: 26px;
+            }
+            .color-presets .dot {
+                width: 18px;
+                height: 18px;
+            }
+            .header-logo .logo-badge {
+                display: none;
+            }
+            .header-right .version-tag {
+                display: none;
+            }
+        }
+
+        /* ===== 滚动条美化 ===== */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--lenovo-gray-1);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--lenovo-gray-3);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--lenovo-gray-4);
+        }
+        .modal-box::-webkit-scrollbar,
+        .img-manage-modal::-webkit-scrollbar {
+            width: 4px;
+        }
+        .modal-box::-webkit-scrollbar-thumb,
+        .img-manage-modal::-webkit-scrollbar-thumb {
+            background: var(--lenovo-gray-3);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- ===== 头部 ===== -->
+        <div class="header">
+            <div class="header-left">
+                <div class="header-logo">
+                    <div class="logo-icon">L</div>
+                    <span class="logo-text">联想<span>邮件</span>编辑器</span>
+                    <span class="logo-badge">专业版</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <span class="badge-outlook">Outlook 完美兼容</span>
+                <span class="version-tag">v2.0</span>
+            </div>
+        </div>
+
+        <!-- ===== 工具栏 ===== -->
+        <div class="toolbar">
+            <button class="btn btn-primary" id="refreshBtn">🔄 生成</button>
+            <button class="btn btn-success" id="copyBtn">📋 复制</button>
+            <button class="btn btn-download" id="downloadBtn">📥 导出HTML</button>
+            <span class="sep"></span>
+
+            <span class="label-tool">标题</span>
+            <button class="btn btn-outline btn-sm" data-heading="h1">H1</button>
+            <button class="btn btn-outline btn-sm" data-heading="h2">H2</button>
+            <button class="btn btn-outline btn-sm" data-heading="h3">H3</button>
+            <span class="sep"></span>
+
+            <span class="label-tool">字体</span>
+            <select id="fontFamily">
+                <option value="微软雅黑">微软雅黑</option>
+                <option value="宋体">宋体</option>
+                <option value="黑体">黑体</option>
+                <option value="仿宋">仿宋</option>
+                <option value="楷体">楷体</option>
+                <option value="Arial">Arial</option>
+                <option value="Times New Roman">Times New Roman</option>
+            </select>
+            <span class="sep"></span>
+
+            <span class="label-tool">字号</span>
+            <select id="fontSize">
+                <option value="9pt">9pt</option>
+                <option value="10pt" selected>10pt</option>
+                <option value="11pt">11pt</option>
+                <option value="12pt">12pt</option>
+                <option value="14pt">14pt</option>
+                <option value="16pt">16pt</option>
+                <option value="18pt">18pt</option>
+                <option value="20pt">20pt</option>
+                <option value="24pt">24pt</option>
+            </select>
+            <span class="sep"></span>
+
+            <span class="label-tool">颜色</span>
+            <input type="color" id="fontColor" value="#000000">
+            <div class="color-presets" id="colorPresets">
+                <span class="dot" style="background:#000000;" data-color="#000000"></span>
+                <span class="dot" style="background:#ff0000;" data-color="#ff0000"></span>
+                <span class="dot" style="background:#0000ff;" data-color="#0000ff"></span>
+                <span class="dot" style="background:#008000;" data-color="#008000"></span>
+                <span class="dot" style="background:#ff6600;" data-color="#ff6600"></span>
+                <span class="dot" style="background:#800080;" data-color="#800080"></span>
+            </div>
+            <span class="sep"></span>
+
+            <div class="highlight-group">
+                <span class="label-tool">🖍️高亮</span>
+                <input type="color" id="highlightColor" value="#ffff00">
+                <div class="color-presets" id="highlightPresets">
+                    <span class="dot" style="background:#ffff00;" data-color="#ffff00"></span>
+                    <span class="dot" style="background:#ffcc00;" data-color="#ffcc00"></span>
+                    <span class="dot" style="background:#ff99cc;" data-color="#ff99cc"></span>
+                    <span class="dot" style="background:#99ccff;" data-color="#99ccff"></span>
+                    <span class="dot" style="background:#ccff99;" data-color="#ccff99"></span>
+                </div>
+            </div>
+            <span class="sep"></span>
+
+            <button class="btn btn-outline btn-sm" id="boldBtn"><b>B</b></button>
+            <button class="btn btn-outline btn-sm" id="underlineBtn"><u>U</u></button>
+            <button class="btn btn-outline btn-sm" id="italicBtn"><i>I</i></button>
+            <button class="btn btn-outline btn-sm" id="clearFormatBtn">清除</button>
+            <span class="sep"></span>
+
+            <button class="btn btn-outline btn-sm" id="alignLeftBtn">≡ 左</button>
+            <button class="btn btn-outline btn-sm" id="alignCenterBtn">☰ 中</button>
+            <button class="btn btn-outline btn-sm" id="alignRightBtn">≡ 右</button>
+            <span class="sep"></span>
+
+            <button class="btn btn-outline btn-sm" id="insertDividerBtn">━ 分割</button>
+            <button class="btn btn-outline btn-sm" id="insertQuoteBtn">📌 引用</button>
+            <button class="btn btn-outline btn-sm" id="insertButtonBtn">🔘 按钮</button>
+            <button class="btn btn-outline btn-sm" id="linkBtn">🔗 链接</button>
+            <span class="sep"></span>
+
+            <div class="symbol-toggle-wrap">
+                <button class="btn btn-outline btn-sm" id="symbolToggleBtn">🔣 符号</button>
+                <div class="symbol-panel" id="symbolPanel">
+                    <div class="sym-category">● 常用符号</div>
+                    <div class="sym-row">
+                        <button class="sym-btn" data-sym="•">•</button>
+                        <button class="sym-btn" data-sym="★">★</button>
+                        <button class="sym-btn" data-sym="☆">☆</button>
+                        <button class="sym-btn" data-sym="♥">♥</button>
+                        <button class="sym-btn" data-sym="♦">♦</button>
+                        <button class="sym-btn" data-sym="♣">♣</button>
+                        <button class="sym-btn" data-sym="♠">♠</button>
+                        <button class="sym-btn" data-sym="✓">✓</button>
+                        <button class="sym-btn" data-sym="✗">✗</button>
+                        <button class="sym-btn" data-sym="❤">❤</button>
+                        <button class="sym-btn" data-sym="✿">✿</button>
+                        <button class="sym-btn" data-sym="➤">➤</button>
+                        <button class="sym-btn" data-sym="◆">◆</button>
+                        <button class="sym-btn" data-sym="◇">◇</button>
+                        <button class="sym-btn" data-sym="☑">☑</button>
+                        <button class="sym-btn" data-sym="☐">☐</button>
+                        <button class="sym-btn" data-sym="☞">☞</button>
+                        <button class="sym-btn" data-sym="☜">☜</button>
+                        <button class="sym-btn" data-sym="✪">✪</button>
+                        <button class="sym-btn" data-sym="✧">✧</button>
+                    </div>
+                    <div class="sym-category">▣ 特殊符号</div>
+                    <div class="sym-row">
+                        <button class="sym-btn" data-sym="→">→</button>
+                        <button class="sym-btn" data-sym="←">←</button>
+                        <button class="sym-btn" data-sym="↑">↑</button>
+                        <button class="sym-btn" data-sym="↓">↓</button>
+                        <button class="sym-btn" data-sym="↔">↔</button>
+                        <button class="sym-btn" data-sym="↕">↕</button>
+                        <button class="sym-btn" data-sym="©">©</button>
+                        <button class="sym-btn" data-sym="®">®</button>
+                        <button class="sym-btn" data-sym="™">™</button>
+                        <button class="sym-btn" data-sym="€">€</button>
+                        <button class="sym-btn" data-sym="£">£</button>
+                        <button class="sym-btn" data-sym="¥">¥</button>
+                        <button class="sym-btn" data-sym="§">§</button>
+                        <button class="sym-btn" data-sym="¶">¶</button>
+                        <button class="sym-btn" data-sym="∞">∞</button>
+                        <button class="sym-btn" data-sym="∑">∑</button>
+                        <button class="sym-btn" data-sym="√">√</button>
+                        <button class="sym-btn" data-sym="∝">∝</button>
+                        <button class="sym-btn" data-sym="∠">∠</button>
+                        <button class="sym-btn" data-sym="⊥">⊥</button>
+                    </div>
+                </div>
+            </div>
+            <span class="sep"></span>
+
+            <div class="global-font-group">
+                <span class="label-tool">🌐全局字号</span>
+                <select id="globalFontSize">
+                    <option value="9pt">9pt</option>
+                    <option value="10pt" selected>10pt</option>
+                    <option value="11pt">11pt</option>
+                    <option value="12pt">12pt</option>
+                    <option value="14pt">14pt</option>
+                    <option value="16pt">16pt</option>
+                    <option value="18pt">18pt</option>
+                    <option value="20pt">20pt</option>
+                    <option value="24pt">24pt</option>
+                    <option value="28pt">28pt</option>
+                    <option value="32pt">32pt</option>
+                </select>
+                <button class="btn-apply-global" id="applyGlobalFontBtn">应用</button>
+            </div>
+            <span class="sep"></span>
+
+            <button class="btn btn-outline btn-sm" id="insertHeaderBtn">🖼️ 头图</button>
+            <button class="btn btn-outline btn-sm" id="insertImageBtn">🖼️ 图片</button>
+            <button class="btn btn-outline btn-sm" id="manageImagesBtn">📷 管理</button>
+            <button class="btn btn-primary btn-sm" id="manageTemplatesBtn">📂 模板</button>
+            <button class="btn btn-danger btn-sm" id="clearBtn">🗑️ 清空</button>
+            <span class="sep"></span>
+            <span style="font-size:11px;color:var(--lenovo-gray-4);font-weight:500;">图片: <span id="imageCount">0</span></span>
+        </div>
+
+        <!-- ===== 编辑+预览 ===== -->
+        <div class="editor-row">
+            <div class="editor-col">
+                <div class="label">
+                    📝 邮件正文
+                    <span>选中文字后应用格式 · [图片:ID] 标记</span>
+                    <button class="save-btn" id="saveTemplateBtn">💾 保存至模板</button>
+                </div>
+                <textarea id="mailEditor" spellcheck="true">亲爱的同学，
+
+你好！
+
+非常高兴你已接受联想2026届校园招聘正式offer，期待你的加入！现有三方签署相关事宜，临近毕业季部门十分关注同学的签约情况，请尽快与我们联系签署三方：
+
+情形一：学校下发的是纸质三方协议
+请将三方协议原件（填写个人信息即可）邮寄至北京联想总部，校招HR会在收到后的15个工作日内发送回执邮件。
+快递寄出三方协议后，请妥善保管快递单。快递单据号将作为联想确认你寄出上述材料的唯一凭证。
+
+邮寄收件信息地址：北京市海淀区西北旺东路10号院2号楼联想总部西区  
+收件人：想想    
+电话：18101022575
+
+情形二：学校实行网签三方协议
+如学校仅需网签且无纸质三方，请发送邮件至 【chinacampus@lenovo.com】邮箱申请网签： 
+【邮件主题】校园招聘-三方协议网签+姓名+工作地 
+【邮件正文】说明需求及需要网签，并提供"姓名、身份证号、手机号、学号、学校名称、学校网签网址、学校网签要求及流程（附件形式）"
+校招HR会在收到邮件申请后的 15个工作日内办理。 
+（如已发送申请邮件请忽略）
+
+如需开具其他证明（如学校领取三方需要公司开具《接收函》等），也请发送邮件到该邮箱说明。 
+附件为2026届校招生录用指引手册，手册内有很详细的三方签署事宜，请注意查收并查看，如有特殊情况请邮件告知，感谢~</textarea>
+            </div>
+            <div class="editor-col">
+                <div class="label">👁️ 预览 <span>Outlook 渲染 · 自动更新</span></div>
+                <div class="preview-box">
+                    <iframe id="previewFrame" srcdoc=""></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 底部设置 ===== -->
+        <div class="footer-settings">
+            <div class="settings-group">
+                <div class="setting-item">
+                    <label><input type="checkbox" id="showFooter" checked> 显示邮件落款</label>
+                    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+                        <input type="text" id="footerText" value="联想中国校园招聘团队" placeholder="落款文字" style="flex:1;min-width:120px;">
+                        <select id="signatureTemplate" style="border:1px solid var(--lenovo-gray-2);border-radius:var(--radius-xl);padding:4px 12px;font-size:11px;background:white;font-family:var(--font-family);">
+                            <option value="">选择签名模板</option>
+                            <option value="校招团队">校招团队</option>
+                            <option value="HR个人">HR个人</option>
+                            <option value="部门负责人">部门负责人</option>
+                        </select>
+                    </div>
+                    <div class="style-row">
+                        <span class="label-sm">字号</span>
+                        <select id="footerFontSize">
+                            <option value="9pt">9pt</option>
+                            <option value="10pt">10pt</option>
+                            <option value="11pt" selected>11pt</option>
+                            <option value="12pt">12pt</option>
+                            <option value="14pt">14pt</option>
+                            <option value="16pt">16pt</option>
+                            <option value="18pt">18pt</option>
+                            <option value="20pt">20pt</option>
+                            <option value="24pt">24pt</option>
+                        </select>
+                        <span class="label-sm">颜色</span>
+                        <input type="color" id="footerColor" value="#1e3a6b">
+                        <span class="label-sm">链接颜色</span>
+                        <input type="color" id="footerLinkColor" value="#1e3a6b">
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <label><input type="checkbox" id="showCopyright" checked> 显示底部版权信息</label>
+                    <input type="text" id="copyrightText" value="© 2026 联想集团 · 校招团队" placeholder="版权文字" style="min-width:160px;">
+                    <div class="style-row">
+                        <span class="label-sm">字号</span>
+                        <select id="copyrightFontSize">
+                            <option value="8pt">8pt</option>
+                            <option value="9pt" selected>9pt</option>
+                            <option value="10pt">10pt</option>
+                            <option value="11pt">11pt</option>
+                            <option value="12pt">12pt</option>
+                            <option value="14pt">14pt</option>
+                        </select>
+                        <span class="label-sm">颜色</span>
+                        <input type="color" id="copyrightColor" value="#7a8aa0">
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <label>链接设置</label>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <label style="font-size:11px;font-weight:400;"><input type="radio" name="linkType" value="none" checked> 无链接</label>
+                        <label style="font-size:11px;font-weight:400;"><input type="radio" name="linkType" value="text"> 文字链接</label>
+                        <label style="font-size:11px;font-weight:400;"><input type="radio" name="linkType" value="url"> URL链接</label>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <label>落款与正文间距</label>
+                    <input type="number" id="footerTopSpacing" value="20" min="0" max="300" class="spacing-input"> pt
+                </div>
+                <div class="setting-item">
+                    <label>落款与底部间距</label>
+                    <input type="number" id="footerBottomSpacing" value="20" min="0" max="300" class="spacing-input"> pt
+                </div>
+            </div>
+            <div class="action-right">
+                <span class="status-msg" id="statusMsg">✅ 就绪</span>
+            </div>
+        </div>
+
+        <!-- ===== 模板管理模态框 ===== -->
+        <div class="modal-overlay" id="templateModal">
+            <div class="modal-box">
+                <h2>
+                    📂 模板管理
+                    <button class="close-btn" id="closeModalBtn">&times;</button>
+                </h2>
+                <div id="templateModalContent"></div>
+            </div>
+        </div>
+
+        <!-- ===== 模板编辑模态框 ===== -->
+        <div class="modal-overlay" id="templateEditModal">
+            <div class="modal-box">
+                <h2 id="templateEditTitle">编辑模板</h2>
+                <div style="margin-bottom:14px;">
+                    <label>模板名称</label>
+                    <input type="text" id="editTplName" placeholder="输入模板名称">
+                </div>
+                <div style="margin-bottom:14px;">
+                    <label>模板内容（支持 HTML）</label>
+                    <textarea id="editTplContent" placeholder="输入模板内容，可包含 HTML 标签"></textarea>
+                </div>
+                <div class="btn-group">
+                    <button class="btn" id="editTplCancelBtn">取消</button>
+                    <button class="btn btn-primary" id="editTplSaveBtn">保存</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 图片尺寸调整模态框 ===== -->
+        <div class="img-size-modal-overlay" id="imgSizeModal">
+            <div class="img-size-modal">
+                <h3>🖼️ 调整图片尺寸</h3>
+                <div class="sub-info" id="imgSizeInfo">原始尺寸：<span id="origSizeDisplay">—</span></div>
+                <div class="field-row">
+                    <label>宽度 (px)</label>
+                    <input type="number" id="imgWidthInput" min="1" step="1" value="300">
+                    <span class="dimension-hint" id="heightHint">高度：<span id="heightDisplay">—</span> px</span>
+                </div>
+                <div style="font-size:12px;color:var(--lenovo-gray-4);margin:-4px 0 12px 62px;">
+                    <span class="ratio-lock">🔒 比例锁定</span> 调整宽度，高度自动按原比例计算
+                </div>
+                <div class="preview-row" id="imgPreviewRow">
+                    <img id="imgPreview" src="" alt="图片预览">
+                </div>
+                <div class="btn-group">
+                    <button class="btn" id="imgSizeCancelBtn">取消</button>
+                    <button class="btn btn-primary" id="imgSizeConfirmBtn">确认插入</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 图片管理模态框 ===== -->
+        <div class="img-manage-modal-overlay" id="imgManageModal">
+            <div class="img-manage-modal">
+                <h3>
+                    📷 图片管理
+                    <button class="close-btn" id="imgManageCloseBtn">&times;</button>
+                </h3>
+                <div style="margin-bottom:14px;font-size:13px;color:var(--lenovo-gray-5);display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                    <span>已插入 <span id="manageImgCount">0</span> 张图片</span>
+                    <button class="btn-sm" id="cleanUnusedBtn" style="padding:2px 16px;border-radius:var(--radius-xl);border:1px solid var(--lenovo-gray-3);background:white;cursor:pointer;font-size:11px;font-family:var(--font-family);transition:var(--transition);">🧹 清理未使用</button>
+                </div>
+                <div id="imgManageList"></div>
+            </div>
+        </div>
+
+        <!-- ===== 隐藏上传 ===== -->
+        <input type="file" id="imageUpload" accept="image/*" multiple class="hidden-input">
+        <input type="file" id="headerUpload" accept="image/*" class="hidden-input">
+    </div>
+
+    <script>
+        // ===== 全部 JavaScript 保持不变 =====
+        (function() {
+            const DEFAULT_HEADER = 'https://talent.lenovo.com.cn/email_banner_01.jpg';
+            const imageMap = new Map();
+            let headerImageUrl = DEFAULT_HEADER;
+
+            const editor = document.getElementById('mailEditor');
+            const iframe = document.getElementById('previewFrame');
+            const statusMsg = document.getElementById('statusMsg');
+            const imageCountSpan = document.getElementById('imageCount');
+
+            const fontFamily = document.getElementById('fontFamily');
+            const fontSize = document.getElementById('fontSize');
+            const fontColor = document.getElementById('fontColor');
+            const highlightColor = document.getElementById('highlightColor');
+
+            const globalFontSize = document.getElementById('globalFontSize');
+            const applyGlobalFontBtn = document.getElementById('applyGlobalFontBtn');
+
+            const showFooterChk = document.getElementById('showFooter');
+            const footerTextInput = document.getElementById('footerText');
+            const footerFontSize = document.getElementById('footerFontSize');
+            const footerColor = document.getElementById('footerColor');
+            const footerLinkColor = document.getElementById('footerLinkColor');
+
+            const showCopyrightChk = document.getElementById('showCopyright');
+            const copyrightTextInput = document.getElementById('copyrightText');
+            const copyrightFontSize = document.getElementById('copyrightFontSize');
+            const copyrightColor = document.getElementById('copyrightColor');
+
+            const linkRadios = document.querySelectorAll('input[name="linkType"]');
+            const footerTopSpacing = document.getElementById('footerTopSpacing');
+            const footerBottomSpacing = document.getElementById('footerBottomSpacing');
+
+            const refreshBtn = document.getElementById('refreshBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const boldBtn = document.getElementById('boldBtn');
+            const underlineBtn = document.getElementById('underlineBtn');
+            const italicBtn = document.getElementById('italicBtn');
+            const clearFormatBtn = document.getElementById('clearFormatBtn');
+            const linkBtn = document.getElementById('linkBtn');
+            const insertHeaderBtn = document.getElementById('insertHeaderBtn');
+            const insertImageBtn = document.getElementById('insertImageBtn');
+            const manageImagesBtn = document.getElementById('manageImagesBtn');
+            const insertDividerBtn = document.getElementById('insertDividerBtn');
+            const insertQuoteBtn = document.getElementById('insertQuoteBtn');
+            const insertButtonBtn = document.getElementById('insertButtonBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const manageTemplatesBtn = document.getElementById('manageTemplatesBtn');
+            const modal = document.getElementById('templateModal');
+            const modalContent = document.getElementById('templateModalContent');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const imageUpload = document.getElementById('imageUpload');
+            const headerUpload = document.getElementById('headerUpload');
+            const signatureTemplate = document.getElementById('signatureTemplate');
+
+            const alignLeftBtn = document.getElementById('alignLeftBtn');
+            const alignCenterBtn = document.getElementById('alignCenterBtn');
+            const alignRightBtn = document.getElementById('alignRightBtn');
+
+            const saveTemplateBtn = document.getElementById('saveTemplateBtn');
+
+            const editModal = document.getElementById('templateEditModal');
+            const editTitle = document.getElementById('templateEditTitle');
+            const editName = document.getElementById('editTplName');
+            const editContent = document.getElementById('editTplContent');
+            const editCancelBtn = document.getElementById('editTplCancelBtn');
+            const editSaveBtn = document.getElementById('editTplSaveBtn');
+
+            const imgManageModal = document.getElementById('imgManageModal');
+            const imgManageCloseBtn = document.getElementById('imgManageCloseBtn');
+            const imgManageList = document.getElementById('imgManageList');
+            const manageImgCount = document.getElementById('manageImgCount');
+            const cleanUnusedBtn = document.getElementById('cleanUnusedBtn');
+
+            const imgSizeModal = document.getElementById('imgSizeModal');
+            const imgWidthInput = document.getElementById('imgWidthInput');
+            const imgPreview = document.getElementById('imgPreview');
+            const origSizeDisplay = document.getElementById('origSizeDisplay');
+            const heightDisplay = document.getElementById('heightDisplay');
+            const imgSizeCancelBtn = document.getElementById('imgSizeCancelBtn');
+            const imgSizeConfirmBtn = document.getElementById('imgSizeConfirmBtn');
+
+            const symbolToggleBtn = document.getElementById('symbolToggleBtn');
+            const symbolPanel = document.getElementById('symbolPanel');
+
+            const STORAGE_KEY = 'lenovo_mail_templates';
+            let templateData = {};
+
+            function loadTemplates() {
+                try {
+                    const stored = localStorage.getItem(STORAGE_KEY);
+                    if (stored) templateData = JSON.parse(stored);
+                    else templateData = {};
+                } catch (e) { templateData = {}; }
+                if (typeof templateData !== 'object' || Array.isArray(templateData)) templateData = {};
+                for (let key in templateData) {
+                    if (!Array.isArray(templateData[key])) templateData[key] = [];
+                }
+            }
+
+            function saveTemplates() {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(templateData));
+            }
+
+            function getSelectionInfo() {
+                const start = editor.selectionStart;
+                const end = editor.selectionEnd;
+                return { start, end, text: editor.value.substring(start, end) };
+            }
+
+            function wrapSelection(openTag, closeTag) {
+                const { start, end, text } = getSelectionInfo();
+                if (!text) { statusMsg.textContent = '⚠️ 请先选中要格式化的文字'; return; }
+                const before = editor.value.substring(0, start);
+                const after = editor.value.substring(end);
+                const formatted = openTag + text + closeTag;
+                editor.value = before + formatted + after;
+                editor.focus();
+                editor.selectionStart = start;
+                editor.selectionEnd = start + formatted.length;
+                updatePreview();
+                statusMsg.textContent = '✅ 格式已应用';
+            }
+
+            function applySpanStyle(styleStr) {
+                const { start, end, text } = getSelectionInfo();
+                if (!text) { statusMsg.textContent = '⚠️ 请先选中要格式化的文字'; return; }
+                const before = editor.value.substring(0, start);
+                const after = editor.value.substring(end);
+                const formatted = `<span style="${styleStr}">${text}</span>`;
+                editor.value = before + formatted + after;
+                editor.focus();
+                editor.selectionStart = start;
+                editor.selectionEnd = start + formatted.length;
+                updatePreview();
+                statusMsg.textContent = '✅ 样式已应用';
+            }
+
+            function insertAtCursor(html) {
+                const { start, end, text } = getSelectionInfo();
+                const before = editor.value.substring(0, start);
+                const after = editor.value.substring(end);
+                editor.value = before + html + after;
+                editor.focus();
+                const newPos = start + html.length;
+                editor.selectionStart = newPos;
+                editor.selectionEnd = newPos;
+                updatePreview();
+                statusMsg.textContent = '✅ 已插入';
+            }
+
+            function applyAlignment(align) {
+                const { start, end, text } = getSelectionInfo();
+                if (!text) { statusMsg.textContent = '⚠️ 请先选中要设置对齐的文字'; return; }
+                const before = editor.value.substring(0, start);
+                const after = editor.value.substring(end);
+                const aligned = `<div style="text-align:${align};">${text}</div>`;
+                editor.value = before + aligned + after;
+                editor.focus();
+                editor.selectionStart = start;
+                editor.selectionEnd = start + aligned.length;
+                updatePreview();
+                statusMsg.textContent = `✅ 已设置为 ${align === 'left' ? '左' : align === 'center' ? '居中' : '右'}对齐`;
+            }
+
+            function generateImgId() { return 'img_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6); }
+
+            function getImageMarkers(text) {
+                const markers = [];
+                const regex = /\[图片:([^\]]+)\]/g;
+                let match;
+                while ((match = regex.exec(text)) !== null) {
+                    markers.push({ id: match[1], full: match[0], index: match.index });
+                }
+                return markers;
+            }
+
+            function countImageMarkers(text) {
+                const markers = getImageMarkers(text);
+                const ids = new Set();
+                markers.forEach(m => ids.add(m.id));
+                return ids.size;
+            }
+
+            function cleanUnusedImages() {
+                const text = editor.value;
+                const markers = getImageMarkers(text);
+                const usedIds = new Set(markers.map(m => m.id));
+                let removed = 0;
+                for (let [id, data] of imageMap) {
+                    if (!usedIds.has(id)) { imageMap.delete(id);
+                        removed++; }
+                }
+                if (removed > 0) statusMsg.textContent = `🧹 已清理 ${removed} 张未使用的图片`;
+                else statusMsg.textContent = '✅ 没有未使用的图片';
+                updatePreview();
+                updateImageCount();
+                return removed;
+            }
+
+            function updateImageCount() {
+                const count = countImageMarkers(editor.value);
+                imageCountSpan.textContent = count;
+            }
+
+            function applyGlobalFontSize(size) {
+                let content = editor.value;
+                if (!content.trim()) { statusMsg.textContent = '⚠️ 内容为空，请先输入文字'; return; }
+                const hasHtml = /<[a-z][\s\S]*>/i.test(content);
+                if (!hasHtml) {
+                    const rawLines = content.split(/\n/);
+                    let result = '';
+                    for (let i = 0; i < rawLines.length; i++) {
+                        const line = rawLines[i];
+                        if (line.trim() === '') result += '\n';
+                        else result += `<span style="font-size:${size};">${line}</span>\n`;
+                    }
+                    editor.value = result.trimEnd();
+                    updatePreview();
+                    statusMsg.textContent = `✅ 全局字号已设置为 ${size}`;
+                    return;
+                }
+                try {
+                    const wrappedHtml = `<div id="__root">${content}</div>`;
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(wrappedHtml, 'text/html');
+                    const root = doc.getElementById('__root');
+                    if (!root) { editor.value = `<span style="font-size:${size};">${content}</span>`;
+                        updatePreview();
+                        statusMsg.textContent = `✅ 全局字号已设置为 ${size}`; return; }
+                    const walker = doc.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
+                    const textNodes = [];
+                    let node;
+                    while ((node = walker.nextNode())) { const txt = node.textContent; if (txt && txt.trim() !== '') textNodes
+                            .push(node); }
+                    if (textNodes.length === 0) { statusMsg.textContent = '⚠️ 未找到可设置字号的文本'; return; }
+                    for (let textNode of textNodes) {
+                        const parent = textNode.parentNode;
+                        if (!parent || parent === root || parent.nodeName === 'BODY') {
+                            const span = doc.createElement('span');
+                            span.style.fontSize = size;
+                            span.textContent = textNode.textContent;
+                            textNode.parentNode.replaceChild(span, textNode);
+                        } else { parent.style.fontSize = size; }
+                    }
+                    let newContent = root.innerHTML;
+                    editor.value = newContent;
+                    updatePreview();
+                    statusMsg.textContent = `✅ 全局字号已设置为 ${size}`;
+                } catch (e) {
+                    console.warn('全局字号解析失败，使用降级方案', e);
+                    editor.value = `<span style="font-size:${size};">${content}</span>`;
+                    updatePreview();
+                    statusMsg.textContent = `✅ 全局字号已设置为 ${size} (降级模式)`;
+                }
+            }
+
+            function insertDivider() {
+                const dividerHtml =
+                    `<table border="0" cellspacing="0" cellpadding="0" align="center" style="width:560px;max-width:100%;border-collapse:collapse;margin:4px auto;"><tbody><tr><td style="border-top:2px solid #cccccc; padding:0; font-size:1px; line-height:1px; height:0;">&nbsp;</td></tr></tbody></table>`;
+                insertAtCursor('\n' + dividerHtml + '\n');
+            }
+
+            function insertQuote() { const text = prompt('请输入引用内容：', '这是重点提示内容'); if (text) insertAtCursor(
+                    `\n【📌 重点提示】\n${text}\n`); }
+
+            function insertButton() { const text = prompt('按钮文字：', '立即确认'); const url = prompt('链接地址：', 'https://'); if (text &&
+                    url) insertAtCursor(`\n【🔘 ${text}】→ ${url}\n`); }
+
+            function insertLink() {
+                const { start, text } = getSelectionInfo();
+                const url = prompt('请输入链接地址:', 'https://');
+                if (!url) return;
+                const linkText = text || prompt('请输入链接文字:', '点击查看');
+                if (!linkText) return;
+                const before = editor.value.substring(0, start);
+                const after = editor.value.substring(start + text.length);
+                editor.value = before + `<a href="${url}" style="color:#1e3a6b;text-decoration:underline;">${linkText}</a>` +
+                    after;
+                updatePreview();
+            }
+
+            function clearFormat() {
+                const { start, end, text } = getSelectionInfo();
+                if (!text) { statusMsg.textContent = '⚠️ 请先选中要清除格式的文字'; return; }
+                const div = document.createElement('div');
+                div.innerHTML = text;
+                const plainText = div.textContent || div.innerText || text;
+                const before = editor.value.substring(0, start);
+                const after = editor.value.substring(end);
+                editor.value = before + plainText + after;
+                editor.focus();
+                editor.selectionStart = start;
+                editor.selectionEnd = start + plainText.length;
+                updatePreview();
+                statusMsg.textContent = '✅ 格式已清除';
+            }
+
+            function insertHeader() { headerUpload.click(); }
+
+            let pendingImageData = null;
+
+            function insertImage() { imageUpload.value = '';
+                imageUpload.click(); }
+
+            imageUpload.addEventListener('change', function(e) {
+                const files = e.target.files;
+                if (!files.length) return;
+                let index = 0;
+                const self = this;
+
+                function processNext() {
+                    if (index >= files.length) { self.value = ''; return; }
+                    const file = files[index];
+                    const reader = new FileReader();
+                    reader.onload = function(ev) {
+                        const dataUrl = ev.target.result;
+                        const img = new Image();
+                        img.onload = function() {
+                            showSizeDialog(img, dataUrl, file.name, function(result) {
+                                if (result) {
+                                    const id = generateImgId();
+                                    imageMap.set(id, { data: result.data, width: result.width,
+                                        height: result.height, name: file.name });
+                                    const marker = `[图片:${id}]`;
+                                    insertAtCursor(marker);
+                                    statusMsg.textContent =
+                                    `🖼️ 已插入图片 (${result.width}×${result.height})`;
+                                    updateImageCount();
+                                } else { statusMsg.textContent = '⏭️ 已跳过图片'; }
+                                index++;
+                                processNext();
+                            });
+                        };
+                        img.onerror = function() { statusMsg.textContent = '⚠️ 无法读取图片，跳过';
+                            index++;
+                            processNext(); };
+                        img.src = dataUrl;
+                    };
+                    reader.onerror = function() { statusMsg.textContent = '⚠️ 读取文件失败，跳过';
+                        index++;
+                        processNext(); };
+                    reader.readAsDataURL(file);
+                }
+                processNext.call(this);
+                setTimeout(() => { self.value = ''; }, 100);
+            });
+
+            let sizeDialogResolve = null;
+
+            function showSizeDialog(img, dataUrl, fileName, callback) {
+                const origWidth = img.naturalWidth || img.width;
+                const origHeight = img.naturalHeight || img.height;
+                imgPreview.src = dataUrl;
+                origSizeDisplay.textContent = `${origWidth} × ${origHeight}`;
+                let defaultWidth = origWidth;
+                if (defaultWidth > 560) defaultWidth = 560;
+                imgWidthInput.value = defaultWidth;
+                updateHeightDisplay(defaultWidth, origWidth, origHeight);
+                imgSizeModal.classList.add('show');
+                return new Promise((resolve) => {
+                    sizeDialogResolve = function(confirmed) {
+                        imgSizeModal.classList.remove('show');
+                        if (confirmed) {
+                            const w = parseInt(imgWidthInput.value);
+                            if (isNaN(w) || w <= 0) { statusMsg.textContent = '⚠️ 无效的宽度值';
+                                resolve(null); return; }
+                            const h = Math.round(origHeight * (w / origWidth));
+                            resolve({ data: dataUrl, width: w, height: h, originalWidth: origWidth,
+                                originalHeight: origHeight });
+                        } else { resolve(null); }
+                        sizeDialogResolve = null;
+                    };
+                }).then(callback);
+            }
+
+            function updateHeightDisplay(width, origW, origH) {
+                const w = parseInt(width);
+                if (isNaN(w) || w <= 0) { heightDisplay.textContent = '—'; return; }
+                const h = Math.round(origH * (w / origW));
+                heightDisplay.textContent = h;
+            }
+
+            imgWidthInput.addEventListener('input', function() {
+                const parts = origSizeDisplay.textContent.split('×');
+                if (parts.length === 2) {
+                    const origW = parseInt(parts[0].trim());
+                    const origH = parseInt(parts[1].trim());
+                    if (origW > 0 && origH > 0) updateHeightDisplay(this.value, origW, origH);
+                }
+            });
+
+            imgSizeConfirmBtn.addEventListener('click', function() { if (sizeDialogResolve) sizeDialogResolve(true); });
+            imgSizeCancelBtn.addEventListener('click', function() { if (sizeDialogResolve) sizeDialogResolve(false); });
+            imgSizeModal.addEventListener('click', function(e) { if (e.target === this && sizeDialogResolve) sizeDialogResolve(
+                    false); });
+            document.addEventListener('keydown', function(e) {
+                if (!imgSizeModal.classList.contains('show')) return;
+                if (e.key === 'Enter') { e.preventDefault(); if (sizeDialogResolve) sizeDialogResolve(true); } else if (e
+                    .key === 'Escape') { e.preventDefault(); if (sizeDialogResolve) sizeDialogResolve(false); }
+            });
+
+            function openImageManager() { renderImageManager();
+                imgManageModal.classList.add('show'); }
+
+            function closeImageManager() { imgManageModal.classList.remove('show'); }
+
+            function renderImageManager() {
+                const text = editor.value;
+                const markers = getImageMarkers(text);
+                const usedIds = new Set(markers.map(m => m.id));
+                let html = '';
+                let count = 0;
+                if (imageMap.size === 0) {
+                    html = `<div class="empty-msg">📭 暂无图片，请先插入图片</div>`;
+                } else {
+                    for (let [id, data] of imageMap) {
+                        const isUsed = usedIds.has(id);
+                        const name = data.name || '未命名';
+                        const dims = `${data.width}×${data.height}`;
+                        count++;
+                        html += `<div class="img-item" style="${isUsed ? '' : 'opacity:0.55;border-color:#ddd;'}">
+                                    <img src="${data.data}" alt="${name}">
+                                    <div class="info">
+                                        <div class="name">${name} ${isUsed ? '' : '⚠️ 未使用'}</div>
+                                        <div class="dims">${dims} · ID: ${id.substr(0,12)}...</div>
+                                    </div>
+                                    <button class="del-btn" data-id="${id}">删除</button>
+                                </div>`;
+                    }
+                }
+                manageImgCount.textContent = count;
+                imgManageList.innerHTML = html;
+                imgManageList.querySelectorAll('.del-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = this.dataset.id;
+                        if (confirm(
+                                `确定删除图片 "${imageMap.get(id)?.name || '未命名'}" 吗？\n（文本中的 [图片:${id}] 标记将不再显示）`
+                                )) {
+                            const regex = new RegExp(`\\[图片:${id}\\]`, 'g');
+                            editor.value = editor.value.replace(regex, '');
+                            imageMap.delete(id);
+                            renderImageManager();
+                            updatePreview();
+                            updateImageCount();
+                            statusMsg.textContent = `🗑️ 已删除图片`;
+                        }
+                    });
+                });
+            }
+
+            cleanUnusedBtn.addEventListener('click', function() {
+                const removed = cleanUnusedImages();
+                renderImageManager();
+                if (removed === 0) statusMsg.textContent = '✅ 没有未使用的图片';
+                else statusMsg.textContent = `🧹 已清理 ${removed} 张未使用的图片`;
+            });
+            imgManageCloseBtn.addEventListener('click', closeImageManager);
+            imgManageModal.addEventListener('click', function(e) { if (e.target === this) closeImageManager(); });
+
+            symbolToggleBtn.addEventListener('click', function(e) { e.stopPropagation();
+                symbolPanel.classList.toggle('show'); });
+            document.addEventListener('click', function(e) {
+                if (!symbolPanel.contains(e.target) && e.target !== symbolToggleBtn) symbolPanel.classList.remove('show');
+            });
+            symbolPanel.querySelectorAll('.sym-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const sym = this.dataset.sym;
+                    insertAtCursor(sym);
+                    symbolPanel.classList.remove('show');
+                });
+            });
+
+            function clearEditor() {
+                if (confirm('清空所有内容？\n（图片数据也会被清除）')) { editor.value = '';
+                    imageMap.clear();
+                    headerImageUrl = DEFAULT_HEADER;
+                    updatePreview();
+                    updateImageCount();
+                    statusMsg.textContent = '🗑️ 已清空'; }
+            }
+
+            function addTemplateFromEditor() {
+                const content = editor.value;
+                if (!content.trim()) { statusMsg.textContent = '⚠️ 编辑器内容为空，无法保存模板'; return; }
+                const markers = getImageMarkers(content);
+                const images = [];
+                for (let m of markers) {
+                    const imgData = imageMap.get(m.id);
+                    if (imgData) { images.push({ id: m.id, data: imgData.data, width: imgData.width, height: imgData
+                            .height, name: imgData.name || '图片' }); }
+                }
+                editTitle.textContent = '新增模板';
+                editName.value = '';
+                editContent.value = content;
+                editSaveBtn._mode = 'add';
+                editSaveBtn._images = images;
+                editModal.classList.add('show');
+            }
+
+            function editTemplate(libName, idx) {
+                const templates = templateData[libName] || [];
+                const tpl = templates[idx];
+                if (!tpl) { statusMsg.textContent = '⚠️ 模板不存在'; return; }
+                editTitle.textContent = '编辑模板';
+                editName.value = tpl.name;
+                editContent.value = tpl.content;
+                editSaveBtn._mode = 'edit';
+                editSaveBtn._libName = libName;
+                editSaveBtn._idx = idx;
+                editSaveBtn._images = tpl.images || [];
+                editModal.classList.add('show');
+            }
+
+            function closeEditModal() {
+                editModal.classList.remove('show');
+                editSaveBtn._mode = null;
+                editSaveBtn._libName = null;
+                editSaveBtn._idx = null;
+                editSaveBtn._images = null;
+            }
+            editCancelBtn.addEventListener('click', closeEditModal);
+            editModal.addEventListener('click', function(e) { if (e.target === this) closeEditModal(); });
+
+            editSaveBtn.addEventListener('click', function() {
+                const name = editName.value.trim();
+                const content = editContent.value;
+                if (!name) { statusMsg.textContent = '⚠️ 请输入模板名称'; return; }
+                if (!content.trim()) { statusMsg.textContent = '⚠️ 模板内容不能为空'; return; }
+                if (this._mode === 'add') {
+                    const libName = '我的模板';
+                    if (!templateData[libName]) templateData[libName] = [];
+                    const images = this._images || [];
+                    templateData[libName].push({ name, content, images });
+                    saveTemplates();
+                    statusMsg.textContent = `✅ 模板 "${name}" 已保存到 "${libName}" 库（含 ${images.length} 张图片）`;
+                } else if (this._mode === 'edit') {
+                    const libName = this._libName;
+                    const idx = this._idx;
+                    if (templateData[libName] && templateData[libName][idx]) {
+                        const oldTpl = templateData[libName][idx];
+                        templateData[libName][idx] = { name, content, images: oldTpl.images || [] };
+                        saveTemplates();
+                        statusMsg.textContent = `✅ 模板 "${name}" 已更新`;
+                    } else { statusMsg.textContent = '⚠️ 模板数据异常，更新失败'; }
+                }
+                closeEditModal();
+                if (modal.classList.contains('show')) renderTemplateManager();
+                updatePreview();
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && editModal.classList.contains('show')) closeEditModal();
+            });
+
+            function applyTemplate(libName, idx) {
+                const templates = templateData[libName] || [];
+                const tpl = templates[idx];
+                if (!tpl) { statusMsg.textContent = '⚠️ 模板不存在'; return; }
+                let content = tpl.content;
+                const images = tpl.images || [];
+                const idMap = {};
+                for (let img of images) {
+                    const newId = generateImgId();
+                    idMap[img.id] = newId;
+                    imageMap.set(newId, { data: img.data, width: img.width, height: img.height, name: img.name ||
+                            '图片' });
+                }
+                for (let oldId in idMap) {
+                    const newId = idMap[oldId];
+                    content = content.replace(new RegExp(`\\[图片:${oldId}\\]`, 'g'), `[图片:${newId}]`);
+                }
+                insertAtCursor('\n' + content + '\n');
+                statusMsg.textContent = `✅ 已应用模板 "${tpl.name}"（恢复 ${images.length} 张图片）`;
+                updateImageCount();
+            }
+
+            function buildOutlookHtml() {
+                let rawText = editor.value;
+                const markers = getImageMarkers(rawText);
+                let resultText = rawText;
+                const sortedMarkers = [...markers].sort((a, b) => b.index - a.index);
+                for (let m of sortedMarkers) {
+                    const imgData = imageMap.get(m.id);
+                    if (imgData) {
+                        const w = imgData.width || 300;
+                        const h = imgData.height || 200;
+                        const imgHtml =
+                            `<img src="${imgData.data}" style="max-width:100%;height:auto;border:0;margin:2px 0;border-radius:4px;width:${w}px;" width="${w}" height="${h}" alt="${imgData.name || '图片'}" />`;
+                        const before = resultText.substring(0, m.index);
+                        const after = resultText.substring(m.index + m.full.length);
+                        resultText = before + imgHtml + after;
+                    } else {
+                        const before = resultText.substring(0, m.index);
+                        const after = resultText.substring(m.index + m.full.length);
+                        resultText = before + after;
+                    }
+                }
+                let bodyHtml = '';
+                const hasHtmlTags = /<[a-z][\s\S]*>/i.test(resultText);
+                const defaultFontSize = '10pt';
+                if (hasHtmlTags) {
+                    const lines = resultText.split(/\n/);
+                    for (let line of lines) {
+                        if (line.trim() === '') {
+                            bodyHtml +=
+                                `<div style="margin:0;padding:0;line-height:1.2;mso-line-height-rule:exactly;font-family:'微软雅黑',sans-serif;height:12pt;">&nbsp;</div>`;
+                        } else {
+                            bodyHtml +=
+                                `<div style="margin:0;padding:0;line-height:1.4;mso-line-height-rule:exactly;font-family:'微软雅黑',sans-serif;">${line}</div>`;
+                        }
+                    }
+                } else {
+                    const lines = resultText.split(/\n/);
+                    for (let line of lines) {
+                        const trimmed = line.trim();
+                        if (trimmed === '') {
+                            bodyHtml +=
+                                `<div style="margin:0;padding:0;line-height:1.2;mso-line-height-rule:exactly;font-size:${defaultFontSize};font-family:'微软雅黑',sans-serif;height:12pt;">&nbsp;</div>`;
+                            continue;
+                        }
+                        let content = trimmed.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                        content = content.replace(/(情形一[：:]\s*)/g, (m) =>
+                            '<b><font color="red" style="color:red;font-weight:bold;">' + m + '</font></b>');
+                        content = content.replace(/(情形二[：:]\s*)/g, (m) =>
+                            '<b><font color="red" style="color:red;font-weight:bold;">' + m + '</font></b>');
+                        content = content.replace(/(请尽快与我们联系签署三方)/g, (m) =>
+                            '<b><font color="red" style="color:red;font-weight:bold;">' + m + '</font></b>');
+                        content = content.replace(/(【[^】]*】)/g, (m) =>
+                            '<span style="color:#1a3a6b;font-weight:500;">' + m + '</span>');
+                        bodyHtml +=
+                            `<div style="margin:0;padding:0;line-height:1.4;mso-line-height-rule:exactly;font-size:${defaultFontSize};font-family:'微软雅黑',sans-serif;">${content}</div>`;
+                    }
+                }
+                const showFooter = showFooterChk.checked;
+                const footerText = footerTextInput.value.trim() || '联想中国校园招聘团队';
+                const showCopy = showCopyrightChk.checked;
+                let copyText = copyrightTextInput.value.trim() || '© 2026 联想集团 · 校招团队';
+                const fSize = footerFontSize.value || '11pt';
+                const fColor = footerColor.value || '#1e3a6b';
+                const fLinkColor = footerLinkColor.value || '#1e3a6b';
+                const cSize = copyrightFontSize.value || '9pt';
+                const cColor = copyrightColor.value || '#7a8aa0';
+                const topSpacing = parseInt(footerTopSpacing.value) || 20;
+                const bottomSpacing = parseInt(footerBottomSpacing.value) || 20;
+                let footerHtml = '';
+                let hasFooter = false;
+                let footerParts = [];
+                if (showFooter && footerText) {
+                    let linkType = 'none';
+                    for (let radio of linkRadios) { if (radio.checked) { linkType = radio.value; break; } }
+                    let displayText = footerText;
+                    let linkUrl = '#';
+                    if (linkType === 'text') { linkUrl = 'mailto:chinacampus@lenovo.com';
+                        displayText = footerText + ' (chinacampus@lenovo.com)'; } else if (linkType === 'url') { linkUrl =
+                            'https://talent.lenovo.com.cn';
+                        displayText = footerText + ' (联想校招官网)'; }
+                    let linkTag = (linkType !== 'none') ?
+                        '<a href="' + linkUrl +
+                        '" style="color:' + fLinkColor +
+                        ';text-decoration:underline;font-family:\'微软雅黑\',sans-serif;">' + displayText + '</a>' :
+                        '<span style="color:' + fColor +
+                        ';font-family:\'微软雅黑\',sans-serif;">' + displayText + '</span>';
+                    footerParts.push(linkTag);
+                    hasFooter = true;
+                }
+                if (showCopy && copyText) {
+                    let copyEscaped = copyText.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    footerParts.push('<span style="font-size:' + cSize + ';color:' + cColor +
+                        ';font-family:\'微软雅黑\',sans-serif;">' + copyEscaped + '</span>');
+                    hasFooter = true;
+                }
+                if (hasFooter) {
+                    let footerContent = footerParts.join('<br>');
+                    footerHtml = `
+                            <table border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;border-collapse:collapse;font-family:'微软雅黑',sans-serif;margin:0;padding:0;">
+                                <tr>
+                                    <td style="padding:${topSpacing}pt 0 0 0;font-family:'微软雅黑',sans-serif;text-align:center;font-size:${fSize};line-height:1.8;mso-line-height-rule:exactly;">
+                                        ${footerContent}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:0;font-size:1px;line-height:${bottomSpacing}pt;height:${bottomSpacing}pt;">&nbsp;</td>
+                                </tr>
+                            </table>
+                        `;
+                }
+                const fullBody = bodyHtml + footerHtml;
+                const headerImg = headerImageUrl ? '<img src="' + headerImageUrl +
+                    '" width="560" style="width:560px;max-width:100%;height:auto;border:0;display:block;" alt="联想校招">' :
+                    '';
+                return `<!DOCTYPE html>
+                        <html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns:m="http://schemas.microsoft.com/office/2004/12/omml" xmlns="http://www.w3.org/TR/REC-html40">
+                        <head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+                        <meta name="Generator" content="Microsoft Word 15 (filtered medium)">
+                        <!--[if !mso]><style>v\\:* {behavior:url(#default#VML);}o\\:* {behavior:url(#default#VML);}w\\:* {behavior:url(#default#VML);}.shape {behavior:url(#default#VML);}</style><![endif]-->
+                        <style>body,table,td,div,span,a,font{font-family:'微软雅黑','Microsoft YaHei',sans-serif;margin:0;padding:0;}div{margin:0;padding:0;line-height:1.4;mso-line-height-rule:exactly;}</style>
+                        </head>
+                        <body style="margin:0;padding:0;background:#e3e3e3;font-family:'微软雅黑','Microsoft YaHei',sans-serif;font-size:10pt;">
+                        <table border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;border-collapse:collapse;background:#E3E3E3;font-family:'微软雅黑','Microsoft YaHei',sans-serif;margin:0;padding:0;">
+                        <tr><td style="padding:0;background:#E3E3E3;font-family:'微软雅黑','Microsoft YaHei',sans-serif;margin:0;">
+                        <table border="0" cellspacing="0" cellpadding="0" align="center" style="width:620px;max-width:620px;background:white;border-collapse:collapse;margin:0 auto;font-family:'微软雅黑','Microsoft YaHei',sans-serif;padding:0;">
+                        <tr>
+                        <td style="padding:0;font-family:'微软雅黑','Microsoft YaHei',sans-serif;margin:0;width:30px;background:white;">&nbsp;</td>
+                        <td style="padding:0;font-family:'微软雅黑','Microsoft YaHei',sans-serif;margin:0;width:560px;background:white;">
+                        <div style="width:560px;max-width:100%;margin:0 auto;padding:6px 0 0 0;text-align:center;">${headerImg}</div>
+                        <div style="width:560px;max-width:100%;margin:0 auto;padding:4px 0 0 0;word-break:break-word;font-family:'微软雅黑','Microsoft YaHei',sans-serif;font-size:10pt;">${fullBody}</div>
+                        </td>
+                        <td style="padding:0;font-family:'微软雅黑','Microsoft YaHei',sans-serif;margin:0;width:30px;background:white;">&nbsp;</td>
+                        </tr>
+                        </table>
+                        </td></tr>
+                        </table>
+                        </body></html>`;
+            }
+
+            function updatePreview() {
+                iframe.srcdoc = buildOutlookHtml();
+                statusMsg.textContent = '✅ 预览已更新';
+                updateImageCount();
+            }
+
+            function copyHtml() {
+                const html = buildOutlookHtml();
+                navigator.clipboard.writeText(html).then(() => {
+                    statusMsg.textContent = '📋 源码已复制 (Outlook兼容)';
+                    setTimeout(() => statusMsg.textContent = '✅ 就绪', 2500);
+                }).catch(() => {
+                    const ta = document.createElement('textarea');
+                    ta.value = html;
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(ta);
+                    statusMsg.textContent = '📋 源码已复制 (备用)';
+                    setTimeout(() => statusMsg.textContent = '✅ 就绪', 2500);
+                });
+            }
+
+            function downloadHtml() {
+                const html = buildOutlookHtml();
+                const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = '联想邮件内容.html';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                statusMsg.textContent = '📥 HTML文件已导出';
+                setTimeout(() => statusMsg.textContent = '✅ 就绪', 3000);
+            }
+
+            function renderTemplateManager() {
+                loadTemplates();
+                let html = '';
+                const libraryNames = Object.keys(templateData);
+                if (libraryNames.length === 0) {
+                    html += `<p style="color:var(--lenovo-gray-4);margin:12px 0;">暂无模板库，请在下方的"创建新模板库"中添加。</p>`;
+                } else {
+                    html += `<div class="library-list">`;
+                    libraryNames.forEach(libName => {
+                        const templates = templateData[libName] || [];
+                        html += `
+                                <div class="library-item">
+                                    <div class="library-header">
+                                        <span class="library-name" data-lib="${libName}">${libName}</span>
+                                        <div class="lib-actions">
+                                            <button class="btn-sm" data-action="rename-lib" data-lib="${libName}">重命名</button>
+                                            <button class="btn-sm btn-danger-sm" data-action="delete-lib" data-lib="${libName}">删除库</button>
+                                        </div>
+                                    </div>
+                                    <div class="template-list">
+                            `;
+                        if (templates.length === 0) {
+                            html += `<div style="font-size:12px;color:var(--lenovo-gray-4);padding:4px 12px;">此库暂无模板</div>`;
+                        } else {
+                            templates.forEach((tpl, idx) => {
+                                const displayName = tpl.name || `模板${idx+1}`;
+                                const imgCount = (tpl.images && tpl.images.length) || 0;
+                                html += `
+                                        <div class="template-item">
+                                            <span class="tpl-name" data-lib="${libName}" data-idx="${idx}">${displayName} ${imgCount > 0 ? `🖼️${imgCount}` : ''}</span>
+                                            <div class="tpl-actions">
+                                                <button class="btn-sm" data-action="apply-tpl" data-lib="${libName}" data-idx="${idx}">应用</button>
+                                                <button class="btn-sm" data-action="edit-tpl" data-lib="${libName}" data-idx="${idx}">编辑</button>
+                                                <button class="btn-sm btn-danger-sm" data-action="delete-tpl" data-lib="${libName}" data-idx="${idx}">删除</button>
+                                            </div>
+                                        </div>
+                                    `;
+                            });
+                        }
+                        html += `
+                                    </div>
+                                    <div class="add-template-area">
+                                        <input type="text" placeholder="模板名称" data-lib="${libName}" class="tpl-name-input">
+                                        <input type="text" placeholder="模板内容（可包含HTML）" data-lib="${libName}" class="tpl-content-input">
+                                        <button class="btn-sm" data-action="add-tpl" data-lib="${libName}">添加模板</button>
+                                    </div>
+                                </div>
+                            `;
+                    });
+                    html += `</div>`;
+                }
+                html += `
+                        <div class="add-library-area">
+                            <input type="text" id="newLibName" placeholder="新模板库名称">
+                            <button class="btn-primary" id="createLibBtn">创建新模板库</button>
+                        </div>
+                    `;
+                modalContent.innerHTML = html;
+
+                modalContent.querySelectorAll('.library-name').forEach(el => {
+                    el.addEventListener('click', function() {
+                        const libName = this.dataset.lib;
+                        const templates = templateData[libName] || [];
+                        if (templates.length === 0) { statusMsg.textContent = '⚠️ 该库为空'; return; }
+                        applyTemplate(libName, 0);
+                        closeModal();
+                    });
+                });
+                modalContent.querySelectorAll('.tpl-name').forEach(el => {
+                    el.addEventListener('click', function() {
+                        const libName = this.dataset.lib;
+                        const idx = parseInt(this.dataset.idx);
+                        applyTemplate(libName, idx);
+                        closeModal();
+                    });
+                });
+                modalContent.querySelectorAll('[data-action="apply-tpl"]').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const libName = this.dataset.lib;
+                        const idx = parseInt(this.dataset.idx);
+                        applyTemplate(libName, idx);
+                        closeModal();
+                    });
+                });
+                modalContent.querySelectorAll('[data-action="edit-tpl"]').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const libName = this.dataset.lib;
+                        const idx = parseInt(this.dataset.idx);
+                        editTemplate(libName, idx);
+                    });
+                });
+                modalContent.querySelectorAll('[data-action="delete-tpl"]').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const libName = this.dataset.lib;
+                        const idx = parseInt(this.dataset.idx);
+                        if (confirm(
+                                `确定删除模板"${templateData[libName]?.[idx]?.name || '未命名'}"吗？`
+                                )) {
+                            templateData[libName].splice(idx, 1);
+                            saveTemplates();
+                            renderTemplateManager();
+                            statusMsg.textContent = '✅ 模板已删除';
+                        }
+                    });
+                });
+                modalContent.querySelectorAll('[data-action="add-tpl"]').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const libName = this.dataset.lib;
+                        const nameInput = this.parentElement.querySelector('.tpl-name-input');
+                        const contentInput = this.parentElement.querySelector('.tpl-content-input');
+                        const name = nameInput.value.trim();
+                        const content = contentInput.value.trim();
+                        if (!name || !content) { statusMsg.textContent = '⚠️ 请填写模板名称和内容'; return; }
+                        if (!templateData[libName]) templateData[libName] = [];
+                        templateData[libName].push({ name, content, images: [] });
+                        saveTemplates();
+                        renderTemplateManager();
+                        statusMsg.textContent = '✅ 模板已添加（不包含图片，如需图片请通过编辑器新增）';
+                    });
+                });
+                modalContent.querySelectorAll('[data-action="rename-lib"]').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const oldName = this.dataset.lib;
+                        const newName = prompt('请输入新的库名称：', oldName);
+                        if (newName && newName.trim() && newName.trim() !== oldName) {
+                            const trimmed = newName.trim();
+                            if (templateData[trimmed]) { statusMsg.textContent = '⚠️ 该名称已存在'; return; }
+                            templateData[trimmed] = templateData[oldName];
+                            delete templateData[oldName];
+                            saveTemplates();
+                            renderTemplateManager();
+                            statusMsg.textContent = '✅ 库已重命名';
+                        }
+                    });
+                });
+                modalContent.querySelectorAll('[data-action="delete-lib"]').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const libName = this.dataset.lib;
+                        if (confirm(`确定删除模板库"${libName}"及其所有模板吗？`)) {
+                            delete templateData[libName];
+                            saveTemplates();
+                            renderTemplateManager();
+                            statusMsg.textContent = '✅ 库已删除';
+                        }
+                    });
+                });
+                const createBtn = document.getElementById('createLibBtn');
+                const newLibInput = document.getElementById('newLibName');
+                if (createBtn && newLibInput) {
+                    createBtn.addEventListener('click', function() {
+                        const name = newLibInput.value.trim();
+                        if (!name) { statusMsg.textContent = '⚠️ 请输入库名称'; return; }
+                        if (templateData[name]) { statusMsg.textContent = '⚠️ 该库已存在'; return; }
+                        templateData[name] = [];
+                        saveTemplates();
+                        renderTemplateManager();
+                        newLibInput.value = '';
+                        statusMsg.textContent = '✅ 模板库已创建';
+                    });
+                    newLibInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') createBtn.click(); });
+                }
+            }
+
+            function openModal() { renderTemplateManager();
+                modal.classList.add('show'); }
+
+            function closeModal() { modal.classList.remove('show'); }
+
+            let debounce;
+            editor.addEventListener('input', () => {
+                clearTimeout(debounce);
+                debounce = setTimeout(() => { updatePreview();
+                    updateImageCount(); }, 300);
+            });
+
+            refreshBtn.addEventListener('click', (e) => { e.preventDefault();
+                updatePreview(); });
+            copyBtn.addEventListener('click', (e) => { e.preventDefault();
+                copyHtml(); });
+            downloadBtn.addEventListener('click', (e) => { e.preventDefault();
+                downloadHtml(); });
+            applyGlobalFontBtn.addEventListener('click', function(e) { e.preventDefault();
+                applyGlobalFontSize(globalFontSize.value); });
+            alignLeftBtn.addEventListener('click', (e) => { e.preventDefault();
+                applyAlignment('left'); });
+            alignCenterBtn.addEventListener('click', (e) => { e.preventDefault();
+                applyAlignment('center'); });
+            alignRightBtn.addEventListener('click', (e) => { e.preventDefault();
+                applyAlignment('right'); });
+
+            document.querySelectorAll('[data-heading]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const level = this.dataset.heading;
+                    const sizes = { h1: '20pt', h2: '16pt', h3: '13pt' };
+                    const colors = { h1: '#1a3a6b', h2: '#1a3a6b', h3: '#1a3a6b' };
+                    applySpanStyle(`font-size:${sizes[level]};font-weight:700;color:${colors[level]};`);
+                });
+            });
+
+            boldBtn.addEventListener('click', (e) => { e.preventDefault();
+                wrapSelection('<b>', '</b>'); });
+            underlineBtn.addEventListener('click', (e) => { e.preventDefault();
+                wrapSelection('<u>', '</u>'); });
+            italicBtn.addEventListener('click', (e) => { e.preventDefault();
+                wrapSelection('<i>', '</i>'); });
+            clearFormatBtn.addEventListener('click', (e) => { e.preventDefault();
+                clearFormat(); });
+
+            fontFamily.addEventListener('change', function() { applySpanStyle(`font-family:'${this.value}',sans-serif;`); });
+            fontSize.addEventListener('change', function() { applySpanStyle(`font-size:${this.value};`); });
+            fontColor.addEventListener('input', function() { applySpanStyle(`color:${this.value};`); });
+            highlightColor.addEventListener('input', function() { applySpanStyle(`background-color:${this.value};`); });
+
+            insertDividerBtn.addEventListener('click', (e) => { e.preventDefault();
+                insertDivider(); });
+            insertQuoteBtn.addEventListener('click', (e) => { e.preventDefault();
+                insertQuote(); });
+            insertButtonBtn.addEventListener('click', (e) => { e.preventDefault();
+                insertButton(); });
+            linkBtn.addEventListener('click', (e) => { e.preventDefault();
+                insertLink(); });
+
+            insertHeaderBtn.addEventListener('click', (e) => { e.preventDefault();
+                insertHeader(); });
+            insertImageBtn.addEventListener('click', (e) => { e.preventDefault();
+                insertImage(); });
+            manageImagesBtn.addEventListener('click', (e) => { e.preventDefault();
+                openImageManager(); });
+            clearBtn.addEventListener('click', (e) => { e.preventDefault();
+                clearEditor(); });
+            saveTemplateBtn.addEventListener('click', function(e) { e.preventDefault();
+                addTemplateFromEditor(); });
+            manageTemplatesBtn.addEventListener('click', (e) => { e.preventDefault();
+                openModal(); });
+            closeModalBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+
+            signatureTemplate.addEventListener('change', function() {
+                const sigs = { '校招团队': '联想中国校园招聘团队', 'HR个人': '联想校招HR · 李老师', '部门负责人': '联想研发部 · 王经理' };
+                if (this.value && sigs[this.value]) { footerTextInput.value = sigs[this.value];
+                    updatePreview(); }
+            });
+
+            document.querySelectorAll('#colorPresets .dot').forEach(dot => {
+                dot.addEventListener('click', function() { fontColor.value = this.dataset.color;
+                    applySpanStyle(`color:${this.dataset.color};`); });
+            });
+            document.querySelectorAll('#highlightPresets .dot').forEach(dot => {
+                dot.addEventListener('click', function() { highlightColor.value = this.dataset.color;
+                    applySpanStyle(`background-color:${this.dataset.color};`); });
+            });
+
+            headerUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(ev) { headerImageUrl = ev.target.result;
+                    updatePreview();
+                    statusMsg.textContent = '🖼️ 头图已更新'; };
+                reader.readAsDataURL(file);
+                this.value = '';
+            });
+
+            [showFooterChk, footerTextInput, footerFontSize, footerColor, footerLinkColor,
+                showCopyrightChk, copyrightTextInput, copyrightFontSize, copyrightColor,
+                footerTopSpacing, footerBottomSpacing
+            ].forEach(el => {
+                el.addEventListener('change', updatePreview);
+                el.addEventListener('input', updatePreview);
+            });
+            linkRadios.forEach(r => r.addEventListener('change', updatePreview));
+
+            window.addEventListener('load', function() {
+                loadTemplates();
+                updatePreview();
+                updateImageCount();
+                statusMsg.textContent = '✅ 就绪';
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'I') { e.preventDefault();
+                    insertImage(); }
+                if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'M') { e.preventDefault();
+                    openImageManager(); }
+                if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'S') { e.preventDefault();
+                    addTemplateFromEditor(); }
+            });
+
+        })();
+    </script>
+</body>
+</html>
